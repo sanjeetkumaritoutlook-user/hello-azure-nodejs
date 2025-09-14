@@ -1,8 +1,3 @@
-
----
-
-### `.github/workflows/azure-webapp.yml`
-```yaml
 name: Deploy to Azure Web App
 
 on:
@@ -26,9 +21,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # 🔑 Login with client ID + tenant ID + secret
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+      # 🚀 Deploy to Web App
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: YOUR_WEBAPP_NAME   # 👈 replace with your Azure Web App name
+          app-name: hello-azure-nodejs-web
           slot-name: Production
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
