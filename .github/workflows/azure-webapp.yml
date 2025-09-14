@@ -12,29 +12,17 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Azure Login
-        uses: azure/login@v2
+      - uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          auth-type: id-token   # 👈 important
 
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+      - uses: azure/webapps-deploy@v2
         with:
-          app-name: hello-azure-nodejs-web   # 👈 your Azure Web App name
+          app-name: hello-azure-nodejs-web
           slot-name: Production
